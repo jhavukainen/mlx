@@ -71,7 +71,7 @@ struct Min {
   cuda::std::enable_if_t<cuda::std::is_integral_v<T>, T>
       __device__ __forceinline__ T operator()(T a, T b) {
     if (isnan(a) || isnan(b)) {
-      return static_cast<T>(NAN);
+      return cuda::std::numeric_limits<T>::quiet_NaN();
     }
     return a < b ? a : b;
   }
@@ -93,7 +93,7 @@ struct Max {
   cuda::std::enable_if_t<cuda::std::is_integral_v<T>, T>
       __device__ __forceinline__ T operator()(T a, T b) {
     if (isnan(a) || isnan(b)) {
-      return static_cast<T>(NAN);
+      return cuda::std::numeric_limits<T>::quiet_NaN();
     }
     return a > b ? a : b;
   }
