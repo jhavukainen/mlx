@@ -68,7 +68,17 @@ struct Prod {
 
 struct Min {
   template <typename T>
-  __device__ __forceinline__ T operator()(T a, T b) {
+  cuda::std::enable_if_t<cuda::std::is_integral_v<T>, T>
+      __device__ __forceinline__ T operator()(T a, T b) {
+    if (isnan(a) || isnan(b)) {
+      return static_cast<T>(NAN);
+    }
+    return a < b ? a : b;
+  }
+
+  template <typename T>
+  cuda::std::enable_if_t<!cuda::std::is_integral_v<T>, T>
+      __device__ __forceinline__ T operator()(T a, T b) {
     return a < b ? a : b;
   }
 
@@ -80,7 +90,17 @@ struct Min {
 
 struct Max {
   template <typename T>
-  __device__ __forceinline__ T operator()(T a, T b) {
+  cuda::std::enable_if_t<cuda::std::is_integral_v<T>, T>
+      __device__ __forceinline__ T operator()(T a, T b) {
+    if (isnan(a) || isnan(b)) {
+      return static_cast<T>(NAN);
+    }
+    return a > b ? a : b;
+  }
+
+  template <typename T>
+  cuda::std::enable_if_t<!cuda::std::is_integral_v<T>, T>
+      __device__ __forceinline__ T operator()(T a, T b) {
     return a > b ? a : b;
   }
 
